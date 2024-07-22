@@ -1,0 +1,150 @@
+public class Camper {
+    private String nombre;
+    private int edad;
+
+    public Camper(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
+    @Override
+    public String toString() {
+        return "Nombre: " + nombre + ", Edad: " + edad;
+    }
+}
+
+import java.util.Scanner;
+
+public class CRUD {
+    private Camper[] campers;
+    private int contador;
+
+    public CRUD(int tamaño) {
+        campers = new Camper[tamaño];
+        contador = 0;
+    }
+
+    // Crear
+    public void inscribirCamper(String nombre, int edad) {
+        if (contador < campers.length) {
+            campers[contador] = new Camper(nombre, edad);
+            contador++;
+        } else {
+            System.out.println("No se puede inscribir más campers, el array está lleno.");
+        }
+    }
+
+    // Leer
+    public void mostrarCampers() {
+        for (int i = 0; i < contador; i++) {
+            System.out.println(i + ". " + campers[i]);
+        }
+    }
+
+    // Actualizar
+    public void actualizarCamper(int indice, String nuevoNombre, int nuevaEdad) {
+        if (indice >= 0 && indice < contador) {
+            campers[indice].setNombre(nuevoNombre);
+            campers[indice].setEdad(nuevaEdad);
+        } else {
+            System.out.println("Índice fuera de rango.");
+        }
+    }
+
+    // Borrar
+    public void borrarCamper(int indice) {
+        if (indice >= 0 && indice < contador) {
+            for (int i = indice; i < contador - 1; i++) {
+                campers[i] = campers[i + 1];
+            }
+            campers[contador - 1] = null;
+            contador--;
+        } else {
+            System.out.println("Índice fuera de rango.");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        CRUD crud = new CRUD(100);
+
+        while (true) {
+            limpiarPantalla();
+            System.out.println("**************************************************");
+            System.out.println("*                   Bienvenido                   *");
+            System.out.println("**************************************************");
+            System.out.println("Cual es tu ROL en CAMPUSLANDS");
+            System.out.println("1. Coordinador\t 2. Trainer\t 3. Salir");
+            int rol = scanner.nextInt();
+            scanner.nextLine();  // Consumir la nueva línea
+
+            if (rol == 1) {
+                while (true) {
+                    limpiarPantalla();
+                    System.out.println("**************************************************");
+                    System.out.println("*             Bienvenido Coordinador             *");
+                    System.out.println("**************************************************");
+                    System.out.println("A cual modulo desea ingresar: ");
+                    System.out.println("1. Camper\t2. Trainer\t");
+                    System.out.println("3. Reportes\t4. Rutas\t");
+                    System.out.println("5. Ir al modulo anterior");
+                    int decision = scanner.nextInt();
+                    scanner.nextLine();  // Consumir la nueva línea
+
+                    if (decision == 1) {
+                        while (true) {
+                            limpiarPantalla();
+                            System.out.println("**************************************************");
+                            System.out.println("*                  MODULO CAMPERS                *");
+                            System.out.println("**************************************************");
+                            System.out.println("1. Inscribir Camper \t 2. Matricular Camper");
+                            System.out.println("3. Rendimiento Camper\t 4. Mostrar lista de campers Riesgo alto");
+                            System.out.println("5. Modulo anterior");
+                            int decisionCamper = scanner.nextInt();
+                            scanner.nextLine();  // Consumir la nueva línea
+
+                            if (decisionCamper == 1) {
+                                System.out.println("Ingrese el nombre del camper:");
+                                String nombre = scanner.nextLine();
+                                System.out.println("Ingrese la edad del camper:");
+                                int edad = scanner.nextInt();
+                                scanner.nextLine();  // Consumir la nueva línea
+                                crud.inscribirCamper(nombre, edad);
+                            } else if (decisionCamper == 4) {
+                                crud.mostrarCampers();
+                                System.out.println("Presione Enter para continuar...");
+                                scanner.nextLine();
+                            } else if (decisionCamper == 5) {
+                                break;
+                            }
+                        }
+                    } else if (decision == 5) {
+                        break;
+                    }
+                }
+            } else if (rol == 3) {
+                break;
+            }
+        }
+
+        scanner.close();
+    }
+
+
+}
