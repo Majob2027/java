@@ -289,20 +289,115 @@ public class Baloncesto {
         }
     }
      
-    public void viewPartido(Scanner sc){
-    
-    
+    public void viewPartido(Scanner sc) {
+    Baloncesto bl = new Baloncesto();
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        con = bl.Conexion();
+        System.out.println("Ingrese el id del partido que desea ver:");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        ps = con.prepareStatement("SELECT * FROM partido WHERE id = ?");
+        ps.setInt(1, id);
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            System.out.println("ID del partido: " + rs.getInt("id"));
+            System.out.println("Equipo Local: " + rs.getString("equipo_local"));
+            System.out.println("Equipo Visitante: " + rs.getString("equipo_visitante"));
+            System.out.println("Cestas Local: " + rs.getInt("cestas_local"));
+            System.out.println("Cestas Visitante: " + rs.getInt("cestas_visitante"));
+            System.out.println("Estado: " + rs.getString("estado"));
+            System.out.println("Fecha del partido: " + rs.getString("fecha_partido"));
+        } else {
+            System.out.println("No se encontró un partido con el ID proporcionado.");
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al ver el partido: " + e.getMessage());
+    } finally {
+        try { if (rs != null) rs.close(); } catch (SQLException e) { /* Ignored */ }
+        try { if (ps != null) ps.close(); } catch (SQLException e) { /* Ignored */ }
+        try { if (con != null) con.close(); } catch (SQLException e) { /* Ignored */ }
     }
+}
+
     
-     public void seeResults(Scanner sc){
-    
-    
+ public void seeResults(Scanner sc) {
+    Baloncesto bl = new Baloncesto();
+    Connection con = null;
+    Statement st = null;
+    ResultSet rs = null;
+
+    try {
+        con = bl.Conexion();
+        st = con.createStatement();
+        rs = st.executeQuery("SELECT * FROM partido");
+
+        while (rs.next()) {
+            System.out.println("ID del partido: " + rs.getInt("id"));
+            System.out.println("Equipo Local: " + rs.getString("equipo_local"));
+            System.out.println("Equipo Visitante: " + rs.getString("equipo_visitante"));
+            System.out.println("Cestas Local: " + rs.getInt("cestas_local"));
+            System.out.println("Cestas Visitante: " + rs.getInt("cestas_visitante"));
+            System.out.println("Estado: " + rs.getString("estado"));
+            System.out.println("Fecha del partido: " + rs.getString("fecha_partido"));
+            System.out.println("---------------------------------");
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al ver los resultados: " + e.getMessage());
+    } finally {
+        try { if (rs != null) rs.close(); } catch (SQLException e) { /* Ignored */ }
+        try { if (st != null) st.close(); } catch (SQLException e) { /* Ignored */ }
+        try { if (con != null) con.close(); } catch (SQLException e) { /* Ignored */ }
     }
+}
+
      
-    public void showwin(Scanner sc){
-    
-    
+ public void showwin(Scanner sc) {
+    Baloncesto bl = new Baloncesto();
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        con = bl.Conexion();
+        System.out.println("Ingrese el id del partido para ver el ganador:");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        ps = con.prepareStatement("SELECT equipo_local, cestas_local, equipo_visitante, cestas_visitante FROM partido WHERE id = ?");
+        ps.setInt(1, id);
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            String equipoLocal = rs.getString("equipo_local");
+            int cestasLocal = rs.getInt("cestas_local");
+            String equipoVisitante = rs.getString("equipo_visitante");
+            int cestasVisitante = rs.getInt("cestas_visitante");
+
+            if (cestasLocal > cestasVisitante) {
+                System.out.println("El ganador es: " + equipoLocal);
+            } else if (cestasLocal < cestasVisitante) {
+                System.out.println("El ganador es: " + equipoVisitante);
+            } else {
+                System.out.println("El partido terminó en empate.");
+            }
+        } else {
+            System.out.println("No se encontró un partido con el ID proporcionado.");
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al ver el ganador del partido: " + e.getMessage());
+    } finally {
+        try { if (rs != null) rs.close(); } catch (SQLException e) { /* Ignored */ }
+        try { if (ps != null) ps.close(); } catch (SQLException e) { /* Ignored */ }
+        try { if (con != null) con.close(); } catch (SQLException e) { /* Ignored */ }
     }
+}
+
     
     
     
